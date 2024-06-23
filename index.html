@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akechi</title>
+    <style>
+        @font-face {
+            font-family: 'Bunken Tech Sans Pro Wide Light';
+            src: url('path_to_bunken_tech_sans_pro_wide_light.woff2') format('woff2'),
+                 url('path_to_bunken_tech_sans_pro_wide_light.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Bunken Tech Sans Pro Wide Light', sans-serif; /* Apply the new font */
+            overflow: hidden;
+            position: relative; /* Ensure relative positioning for absolute elements */
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1s ease-in-out; /* Smooth transition */
+        }
+
+        .container.show {
+            opacity: 1; /* Show content */
+        }
+
+        .akechi {
+            font-size: 3em;
+            animation: fadeText 1s infinite alternate;
+        }
+
+        @keyframes fadeText {
+            from {
+                color: grey;
+            }
+            to {
+                color: white;
+            }
+        }
+
+        #typed-text {
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            color: white;
+            animation: glow 1s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+            }
+        }
+
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .drop {
+            position: absolute;
+            top: -100px;
+            font-size: 1.5em;
+            color: white;
+            animation: fall linear infinite;
+            pointer-events: none; /* Disable pointer events on drops */
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1em; /* Smaller font size */
+            text-align: center;
+            color: white; /* Text color */
+            z-index: 2;
+            opacity: 1;
+            transition: opacity 1s ease-in-out; /* Smooth transition */
+            font-family: 'Bunken Tech Sans Pro Wide Light', sans-serif; /* Use new font */
+        }
+
+        .loading-text {
+            font-size: 0.8em; /* Adjust smaller font size */
+            font-weight: lighter; /* Adjust font weight if needed */
+            animation: glowText 1s infinite alternate;
+        }
+
+        @keyframes glowText {
+            from {
+                color: white;
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            to {
+                color: white;
+                text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+            }
+        }
+
+        /* Styles for the big image */
+        .big-image {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            z-index: 1; /* Ensure it's above other content */
+        }
+
+        /* Circle Image Styles */
+        .circle-image {
+            position: absolute;
+            bottom: 40px; /* Adjust bottom position */
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            z-index: 2; /* Ensure above other content */
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Smooth animation */
+            animation: floatAnimation 3s ease-in-out infinite alternate; /* Custom animation */
+        }
+
+        .circle-image.show {
+            opacity: 1; /* Show image */
+            transform: translateX(-50%) translateY(-30px); /* Move slightly up */
+        }
+
+        .circle-image img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; /* Circular shape */
+        }
+
+        /* Disable text selection */
+        body {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard syntax */
+        }
+
+        /* Custom animation */
+        @keyframes floatAnimation {
+            0% {
+                transform: translateX(-50%) translateY(-30px);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-40px);
+            }
+            100% {
+                transform: translateX(-50%) translateY(-30px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-text">Click anywhere to enter</div>
+    </div>
+    <div class="container" id="content">
+        <img src="https://cdn.discordapp.com/attachments/1241771518741184542/1254539819254550638/pdruTZrMZ4cIKoAKoAKoACrwPyvwB4fhTfynxMkJAAAAAElFTkSuQmCC.png?ex=6679dcc1&is=66788b41&hm=9f3b245ad6303a4d48f777b47058a7e8cd93e822012ff283b84711950d88be39&" width="9930" height="430" alt="Big Image" class="big-image">
+        <h1 class="akechi">Akechi</h1>
+        <div class="typed-text" id="typed-text"></div>
+        <p class="discord-text">手首を切る</p>
+    </div>
+    <div class="rain" id="rain"></div>
+
+    <!-- Circle Image with Link -->
+    <a href="https://abaddon.rf.gd" target="_blank" rel="noopener noreferrer" class="circle-image" id="circleImage">
+        <img src="https://cdn.discordapp.com/attachments/1241771518741184542/1254532157138010202/Dqnon3spVUdwAAAABJRU5ErkJggg.png?ex=6679d59e&is=6678841e&hm=749962805e69eff9bf560367ee329feb014b4d15008febd905b6203f5a129d8c&" alt="Circle Image">
+    </a>
+
+    <!-- Background music -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="kankan.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const words = ["developer", "xd", "lol"];
+        let currentWordIndex = 0;
+        let currentCharIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 50; // Constant typing speed
+        const deletingSpeed = 25; // Constant deleting speed
+        const delayBetweenWords = 500;
+
+        const typedTextElement = document.getElementById("typed-text");
+
+        function type() {
+            const currentWord = words[currentWordIndex];
+            if (isDeleting) {
+                typedTextElement.textContent = currentWord.substring(0, currentCharIndex - 1);
+                currentCharIndex--;
+                if (currentCharIndex === 0) {
+                    isDeleting = false;
+                    currentWordIndex = (currentWordIndex + 1) % words.length;
+                }
+            } else {
+                typedTextElement.textContent = currentWord.substring(0, currentCharIndex + 1);
+                currentCharIndex++;
+                if (currentCharIndex === currentWord.length) {
+                    isDeleting = true;
+                    setTimeout(type, delayBetweenWords);
+                    return;
+                }
+            }
+            setTimeout(type, isDeleting ? deletingSpeed : typingSpeed);
+        }
+
+        // Rain effect
+        const rainContainer = document.getElementById('rain');
+        const symbols = ["$", ":3", "xd"];
+        const numDrops = 100;
+
+        function createDrop() {
+            const drop = document.createElement('div');
+            drop.className = 'drop';
+            drop.style.left = `${Math.random() * 100}vw`;
+            drop.style.animationDuration = `${Math.random() * 2 + 3}s`;
+            drop.style.fontSize = `${Math.random() * 1.5 + 1}em`;
+            drop.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            rainContainer.appendChild(drop);
+
+            // Remove drop after animation completes
+            drop.addEventListener('animationend', () => {
+                drop.remove();
+            });
+        }
+
+        // Create initial drops
+        for (let i = 0; i < numDrops; i++) {
+            setTimeout(createDrop, Math.random() * 5000);
+        }
+
+        // Continuously create drops
+        setInterval(createDrop, 300);
+
+        // Typing effect for the browser title
+        const titleText = "Akechi";
+        let titleIndex = 0;
+
+        function typeTitle() {
+            document.title = titleText.substring(0, titleIndex + 1);
+            titleIndex++;
+            if (titleIndex === titleText.length) {
+                titleIndex = 0;
+            }
+            setTimeout(typeTitle, 300); // Adjust typing speed for the title here
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            typeTitle();
+        });
+
+        // Click anywhere to fade out the loading screen and reveal content
+        document.addEventListener('click', function() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                document.getElementById('content').classList.add('show'); // Show content after loading
+                document.getElementById('backgroundMusic').play(); // Start background music
+                document.getElementById('circleImage').classList.add('show'); // Show circle image
+                setTimeout(type, typingSpeed); // Start typing effect after click
+            }, 1000); // Adjust timing as needed to match the opacity transition
+        });
+
+        // Disable animation during text selection to prevent speed up
+        document.addEventListener('selectstart', () => {
+            isDeleting = false;
+            currentCharIndex = 0;
+            setTimeout(type, typingSpeed); // Restart typing effect
+        });
+
+    </script>
+</body>
+</html>
